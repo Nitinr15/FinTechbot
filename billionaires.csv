@@ -1,0 +1,29 @@
+year,rank,name,net_worth,age,natinality,source_wealth
+2021,1,Jeff Bezos,177,57,United States,Amazon
+2021,2,Elon Musk,151,49,United States,"Tesla, SpaceX"
+2021,3,Bernard Arnault & family,150,72,France,LVMH
+2021,4,Bill Gates,124,65,United States,Microsoft
+2021,5,Mark Zuckerberg,97,36,United States,Facebook
+2021,6,Warren Buffett,96,90,United States,Berkshire Hathaway
+2021,7,Larry Ellison,93,76,United States,Oracle Corporation
+2021,8,Larry Page,91.5,48,United States,Alphabet Inc.
+2021,9,Sergey Brin,89,47,United States,Alphabet Inc.
+2021,10,Mukesh Ambani,84.5,63,India,Reliance Industries
+2020,1,Jeff Bezos,113,56,United States,Amazon
+2020,2,Bill Gates,98,64,United States,Microsoft
+2020,3,Bernard Arnault & family,76,71,France,LVMH
+2020,4,Warren Buffett,67.5,89,United States,Berkshire Hathaway
+2020,5,Larry Ellison,59,75,United States,Oracle Corporation
+2020,6,Amancio Ortega,55.1,84,Spain,"Inditex, Zara"
+2020,7,Mark Zuckerberg,54.7,35,United States,Facebook
+2020,8,Jim Walton,54.6,71,United States,Walmart
+2020,9,Alice Walton,54.4,70,United States,Walmart
+2020,10,S. Robson Walton,54.1,77,United States,Walmart
+2019,1,Jeff Bezos,131,55,United States,Amazon
+2019,2,Bill Gates,96.5,63,United States,Microsoft
+2019,3,Warren Buffett,82.5,88,United States,Berkshire Hathaway
+2019,4,Bernard Arnault,76,70,France,LVMH
+2019,5,Carlos Slim,64,79,Mexico,"América Móvil, Grupo Carso"
+2019,6,Amancio Ortega,62.7,82,Spain,"Inditex, Zara"
+2019,7,Larry Ellison,62.5,74,United States,Oracle Corporation
+2019,8,Mark Zuckerberg,62.3,34,United States,Facebook

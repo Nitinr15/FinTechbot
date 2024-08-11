@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FintechBot</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <!-- Add Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+    </style>
+</head>
+<body>
+    <div class="chatbot-wrapper">
+        <div class="chatbot-container">
+            <header class="chatbot-header">
+                <img src="{{ url_for('static', filename='logo.png') }}" alt="Chatbot Logo" class="logo">
+                <h1>FintechBot</h1>
+            </header>
+            <div class="chatbot-content">
+                <div class="message-box welcome-message">
+                    <p>Hi there!</p>
+                </div>
+                <div class="message-box middle-message">
+                    <p>How may I assist you today?</p>
+                </div>
+                <div id="messageContainer" class="message-container">
+                    <!-- Generated answers will be appended here -->
+                </div>
+            </div>
+            <form id="chatForm" class="chatbot-input">
+                <label for="file" class="file-upload-button">
+                    <img src="{{ url_for('static', filename='logo1.png') }}" alt="Attach Document" class="logo-small">
+                </label>
+                <input type="file" id="file" name="file" class="file-upload-input"/>
+                <input type="text" id="question" name="question" placeholder="Ask a question..." required />
+                <button type="submit" class="send-button"><i class="fas fa-paper-plane"></i></button>
+            </form>
+            <footer>
+                <p>Copyright © 1996-2024 Smart Data Enterprise</p>
+            </footer>
+        </div> <!-- Closing tag for chatbot-container -->
+    </div> <!-- Closing tag for chatbot-wrapper -->
+    
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const chatForm = document.getElementById("chatForm");
+            const fileInput = document.getElementById("file");
+            const messageContainer = document.getElementById("messageContainer");
+    
+            // Function to display loader
+            function showLoader() {
+                const loader = document.createElement("div");
+                loader.className = "loader";
+                document.querySelector(".chatbot-container").appendChild(loader);
+                autoScroll();
+            }
+    
+            // Function to remove loader
+            function hideLoader() {
+                const loader = document.querySelector(".loader");
+                if (loader) {
+                    loader.remove();
+                }
+                autoScroll(); // Ensure scrolling after removing loader
+            }
+    
+            // Function to display message
+            function showMessage(text, align = "left") {
+                const messageBox = document.createElement("div");
+                messageBox.className = `message-box message-${align}`;
+                messageBox.textContent = text;
+                messageContainer.appendChild(messageBox);
+                autoScroll();
+            }
+    
+            // Function to simulate typing
+            function typeResponse(text, element) {
+                const words = text.split(' ');
+                let index = 0;
+    
+                function addWord() {
+                    if (index < words.length) {
+                        element.textContent += words[index] + ' ';
+                        index++;
+                        setTimeout(addWord, 100);  // Adjust typing speed here (in milliseconds)
+                    } else {
+                        autoScroll(); // Ensure scrolling after typing is complete
+                    }
+                }
+    
+                addWord();
+            }
+    
+            // Auto scroll function
+            function autoScroll() {
+                messageContainer.scrollTop = messageContainer.scrollHeight;
+            }
+    
+            // Handle file upload
+            fileInput.addEventListener("change", function() {
+                const file = fileInput.files[0];
+                if (file) {
+                    showLoader();
+                    const formData = new FormData();
+                    formData.append("file", file);
+    
+                    fetch("/upload", {
+                        method: "POST",
+                        body: formData
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        // Display the uploaded document name
+                        showMessage(`Uploaded Document: ${file.name}`, "left");
+                        // Display the success message
+                        showMessage("File uploaded successfully.", "left");
+                        fileInput.value = ""; // Clear the file input
+                        hideLoader(); // Hide the loader once upload is complete
+                    })
+                    .catch(error => {
+                        showMessage("Failed to upload file.", "left");
+                        console.error("Error:", error);
+                        hideLoader(); // Ensure loader is hidden even if there is an error
+                    });
+                }
+            });
+    
+            // Handle form submission
+            chatForm.addEventListener("submit", function(event) {
+                event.preventDefault();
+                const questionInput = document.getElementById("question");
+                const question = questionInput.value;
+    
+                if (question.trim()) {
+                    showMessage(question, "left");
+                    showLoader(); // Show loader when generating a response
+                    const data = { question };
+    
+                    fetch("/ask", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify(data)
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        const responseElement = document.createElement("div");
+                        responseElement.className = "message-box message-left";
+                        messageContainer.appendChild(responseElement);
+                        if (data.answer) {
+                            typeResponse(data.answer, responseElement);
+                        } else {
+                            responseElement.textContent = "Failed to get an answer.";
+                            autoScroll(); // Ensure scroll down if no typing
+                        }
+                        questionInput.value = ""; // Clear the question input
+                        hideLoader(); // Hide loader once response is received
+                    })
+                    .catch(error => {
+                        showMessage("Failed to get an answer.", "right");
+                        console.error("Error:", error);
+                        hideLoader(); // Ensure loader is hidden even if there is an error
+                    });
+                }
+            });
+        });
+    </script>
+    
